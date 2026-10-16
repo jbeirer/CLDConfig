@@ -80,6 +80,9 @@ if reco_args.enableLCFIJet:
     JetClusteringAndRefiner.ProcessorType = "LcfiplusProcessor"
     JetClusteringAndRefiner.Parameters = {
                                         "Algorithms": ["JetClustering", "JetVertexRefiner"],
+                                        "BeamSizeX": [str(BEAM_SPOT_SIZES[reco_args.cms][0])],
+                                        "BeamSizeY": [str(BEAM_SPOT_SIZES[reco_args.cms][1])],
+                                        "BeamSizeZ": [str(BEAM_SPOT_SIZES[reco_args.cms][2])],
                                         "JetClustering.AlphaParameter": ["1.0"],
                                         "JetClustering.BetaParameter": ["1.0"],
                                         "JetClustering.GammaParameter": ["1.0"],
