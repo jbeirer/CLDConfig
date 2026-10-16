@@ -19,15 +19,16 @@
 from Gaudi.Configuration import WARNING
 from Configurables import MarlinProcessorWrapper
 
+# LCFIPlus keeps one beam spot for all its processors, set by the last one initialised
+# (ILC values if it has none), so every LcfiplusProcessor must get the same beam sizes
+LCFIPLUS_BEAM_SIZES = {f"BeamSize{axis}": [str(size)] for axis, size in zip("XYZ", BEAM_SPOT_SIZES[reco_args.cms])}
 
 VertexFinder = MarlinProcessorWrapper("VertexFinder")
 VertexFinder.OutputLevel = WARNING
 VertexFinder.ProcessorType = "LcfiplusProcessor"
 VertexFinder.Parameters = {
                            "Algorithms": ["PrimaryVertexFinder", "BuildUpVertex"],
-                           "BeamSizeX": [str(BEAM_SPOT_SIZES[reco_args.cms][0])],
-                           "BeamSizeY": [str(BEAM_SPOT_SIZES[reco_args.cms][1])],
-                           "BeamSizeZ": [str(BEAM_SPOT_SIZES[reco_args.cms][2])],
+                           **LCFIPLUS_BEAM_SIZES,
                            "BuildUpVertex.AVFTemperature": ["5.0"],
                            "BuildUpVertex.AssocIPTracks": ["1"],
                            "BuildUpVertex.AssocIPTracksChi2RatioSecToPri": ["2.0"],
@@ -80,9 +81,7 @@ if reco_args.enableLCFIJet:
     JetClusteringAndRefiner.ProcessorType = "LcfiplusProcessor"
     JetClusteringAndRefiner.Parameters = {
                                         "Algorithms": ["JetClustering", "JetVertexRefiner"],
-                                        "BeamSizeX": [str(BEAM_SPOT_SIZES[reco_args.cms][0])],
-                                        "BeamSizeY": [str(BEAM_SPOT_SIZES[reco_args.cms][1])],
-                                        "BeamSizeZ": [str(BEAM_SPOT_SIZES[reco_args.cms][2])],
+                                        **LCFIPLUS_BEAM_SIZES,
                                         "JetClustering.AlphaParameter": ["1.0"],
                                         "JetClustering.BetaParameter": ["1.0"],
                                         "JetClustering.GammaParameter": ["1.0"],
@@ -145,9 +144,7 @@ if CONFIG["VertexUnconstrained"] == "ON":
     VertexFinderUnconstrained.ProcessorType = "LcfiplusProcessor"
     VertexFinderUnconstrained.Parameters = {
                                             "Algorithms": ["PrimaryVertexFinder", "BuildUpVertex"],
-                                            "BeamSizeX": [str(BEAM_SPOT_SIZES[reco_args.cms][0])],
-                                            "BeamSizeY": [str(BEAM_SPOT_SIZES[reco_args.cms][1])],
-                                            "BeamSizeZ": [str(BEAM_SPOT_SIZES[reco_args.cms][2])],
+                                            **LCFIPLUS_BEAM_SIZES,
                                             "BuildUpVertex.AVFTemperature": ["5.0"],
                                             "BuildUpVertex.AssocIPTracks": ["1"],
                                             "BuildUpVertex.AssocIPTracksChi2RatioSecToPri": ["2.0"],
